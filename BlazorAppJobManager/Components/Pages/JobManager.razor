@@ -1,0 +1,37 @@
+﻿@page "/"
+@page "/jobmanager"
+@using BlazorAppJobManager.Services
+@inject JobService JobService
+
+<PageTitle>Job Manager</PageTitle>
+<h3>NATS Publisher</h3>
+
+<div>
+    <h4>Publish to LIMITS_STREAM</h4>
+    <button @onclick="PublishToLimitsStream">Publish Message</button>
+</div>
+
+<div>
+    <h4>Publish to WORKQUEUE_STREAM</h4>
+    <button @onclick="PublishToWorkqueueStream">Publish Message</button>
+</div>
+
+<p>@StatusMessage</p>
+
+@code {
+    private string StatusMessage = "";
+
+    private async Task PublishToLimitsStream()
+    {
+        var message = new TaskMessage { TaskId = 1, Description = "Task 1 for Limits" };
+        await JobService.PublishToLimitsStreamAsync(message);
+        StatusMessage = "Message published to LIMITS_STREAM!";
+    }
+
+    private async Task PublishToWorkqueueStream()
+    {
+        var message = new TaskMessage { TaskId = 2, Description = "Task 2 for Workqueue" };
+        await JobService.PublishToWorkqueueStreamAsync(message);
+        StatusMessage = "Message published to WORKQUEUE_STREAM!";
+    }
+}
